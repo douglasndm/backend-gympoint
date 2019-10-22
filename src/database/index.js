@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import databaseConfig from '../config/database';
 
 import Admin from '../app/models/Admin';
-import Students from '../app/models/Students';
+import Students from '../app/models/Student';
 
 const models = [Admin, Students];
 
