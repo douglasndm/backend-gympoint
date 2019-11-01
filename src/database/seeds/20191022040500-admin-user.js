@@ -17,5 +17,13 @@ module.exports = {
         );
     },
 
-    down: () => {},
+    down: (queryInterface, Sequelize) => {
+        return queryInterface.bulkDelete('admins', null, {});
+    },
 };
+
+/*
+
+down: (queryInterface, Sequelize) => {
+    return queryInterface.bulkDelete('Users', null, {});
+  } */
