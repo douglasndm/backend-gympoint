@@ -4,8 +4,8 @@ module.exports = {
             id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                primaryKey: true,
                 autoIncrement: true,
+                primaryKey: true,
             },
             title: {
                 type: Sequelize.STRING,
@@ -17,7 +17,7 @@ module.exports = {
                 allowNull: false,
             },
             price: {
-                type: Sequelize.DECIMAL,
+                type: Sequelize.DOUBLE,
                 allowNull: false,
             },
 
