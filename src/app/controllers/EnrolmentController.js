@@ -1,8 +1,10 @@
 import * as Yup from 'yup';
-import { isBefore, parseISO, addMonths } from 'date-fns';
+import { isBefore, parseISO, addMonths, format } from 'date-fns';
+import { pt } from 'date-fns/locale';
 import Enrolment from '../models/Enrolment';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
+import Mail from '../../lib/Mail';
 
 class EnrolmentController {
     async index(req, res) {
@@ -54,6 +56,33 @@ class EnrolmentController {
             price: plan.price * plan.duration,
         });
 
+        const formatedStartDate = format(
+            start_date,
+            "eeee, dd 'de' MMMM 'de' yyyy",
+            {
+                locale: pt,
+            }
+        );
+
+        const formatedEndDate = format(
+            end_date,
+            "eeee, dd 'de' MMMM 'de' yyyy",
+            { locale: pt }
+        );
+
+        await Mail.sendMail({
+            to: `${student.name} <${student.email}>`,
+            subject: 'Confirmação de matrícula',
+            template: 'NewStudent',
+            context: {
+                student: student.name,
+                plan: plan.title,
+                start_date: formatedStartDate,
+                end_date: formatedEndDate,
+                price: `R$${price}`,
+            },
+        });
+
         return res.json({
             id,
             student_id,
@@ -100,6 +129,17 @@ class EnrolmentController {
         });
 
         return res.send(enrolment);
+    }
+
+    async delete(req, res) {
+        const enrolment = await Enrolment.findByPk(req.params.id);
+
+        if (!enrolment)
+            return res.status(400).json({ error: "Enrolment didn't found" });
+
+        enrolment.destroy();
+
+        return res.json({ success: true });
     }
 }
 
