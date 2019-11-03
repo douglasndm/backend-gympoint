@@ -40,6 +40,7 @@ class EnrolmentController {
         }
 
         const {
+            id,
             student_id,
             plan_id,
             start_date,
@@ -53,7 +54,52 @@ class EnrolmentController {
             price: plan.price * plan.duration,
         });
 
-        return res.json({ student_id, plan_id, start_date, end_date, price });
+        return res.json({
+            id,
+            student_id,
+            plan_id,
+            start_date,
+            end_date,
+            price,
+        });
+    }
+
+    async update(req, res) {
+        const schema = Yup.object().shape({
+            student_id: Yup.number(),
+            plan_id: Yup.number(),
+            start_date: Yup.date(),
+        });
+
+        if (!(await schema.isValid(req.body)))
+            return res.status(400).json({ error: 'Validations fails' });
+
+        const oldEnrolment = await Enrolment.findByPk(req.params.id);
+
+        const startDate = req.body.start_date
+            ? parseISO(req.body.start_date)
+            : oldEnrolment.start_date;
+
+        if (isBefore(startDate, new Date()))
+            return res
+                .status(400)
+                .json({ error: 'Past dates are not permited' });
+
+        const plan = await Plan.findByPk(
+            req.body.plan_id ? req.body.plan_id : oldEnrolment.plan_id
+        );
+
+        const enrolment = await oldEnrolment.update({
+            student_id: req.body.student_id
+                ? req.body.student_id
+                : oldEnrolment.student_id,
+            plan_id: req.body.plan_id ? req.body.plan_id : oldEnrolment.plan_id,
+            start_date: startDate,
+            end_date: addMonths(startDate, plan.duration),
+            price: plan.price * plan.duration,
+        });
+
+        return res.send(enrolment);
     }
 }
 
