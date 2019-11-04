@@ -1,24 +1,24 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Students extends Model {
+class CheckIn extends Model {
     static init(sequelize) {
         super.init(
             {
                 id: {
                     type: Sequelize.INTEGER,
                     primaryKey: true,
+                    autoIncrement: true,
                 },
-                name: Sequelize.STRING,
-                email: Sequelize.STRING,
-                age: Sequelize.INTEGER,
-                weight: Sequelize.DOUBLE,
-                height: Sequelize.DOUBLE,
+                student_id: Sequelize.INTEGER,
+                created_at: Sequelize.DATE,
+                updated_at: Sequelize.DATE,
             },
             {
                 sequelize,
+                modelName: 'checkins',
             }
         );
     }
 }
 
-export default Students;
+export default CheckIn;
