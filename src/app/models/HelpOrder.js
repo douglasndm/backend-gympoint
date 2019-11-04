@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
-class Students extends Model {
+class HelpOrder extends Model {
     static init(sequelize) {
         super.init(
             {
@@ -9,11 +9,10 @@ class Students extends Model {
                     primaryKey: true,
                     autoIncrement: true,
                 },
-                name: Sequelize.STRING,
-                email: Sequelize.STRING,
-                age: Sequelize.INTEGER,
-                weight: Sequelize.DOUBLE,
-                height: Sequelize.DOUBLE,
+                student_id: Sequelize.INTEGER,
+                question: Sequelize.STRING,
+                answer: Sequelize.STRING,
+                answer_at: Sequelize.DATE,
             },
             {
                 sequelize,
@@ -22,4 +21,4 @@ class Students extends Model {
     }
 }
 
-export default Students;
+export default HelpOrder;
