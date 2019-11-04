@@ -5,6 +5,14 @@ import CheckIn from '../models/CheckIn';
 import Student from '../models/Student';
 
 class CheckInController {
+    async index(req, res) {
+        const checkins = await CheckIn.findAll({
+            where: { student_id: req.params.student_id },
+        });
+
+        return res.json(checkins);
+    }
+
     async store(req, res) {
         const schema = Yup.object().shape({
             student_id: Yup.number().required(),

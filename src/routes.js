@@ -13,6 +13,7 @@ const routes = new Router();
 routes.post('/session', SessionController.store);
 
 routes.post('/students/:student_id/checkins', CheckInController.store);
+routes.get('/students/:student_id/checkins', CheckInController.index);
 
 routes.use(authMiddleware);
 routes.post('/students', StudentControoler.store);
