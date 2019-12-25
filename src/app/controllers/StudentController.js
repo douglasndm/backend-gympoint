@@ -1,7 +1,28 @@
 import * as Yup from 'yup';
+import { Op } from 'sequelize';
 import Student from '../models/Student';
 
 class StundetController {
+    async index(req, res) {
+        const { q } = req.query;
+
+        let result = null;
+
+        if (q !== '') {
+            result = await Student.findAll({
+                where: {
+                    name: {
+                        [Op.like]: `%${q}%`,
+                    },
+                },
+            });
+        } else {
+            result = await Student.findAll();
+        }
+
+        return res.json(result);
+    }
+
     async store(req, res) {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
